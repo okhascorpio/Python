@@ -1,4 +1,4 @@
-#exercise_1
+#exercise_1 arithmetics
 #kilometers to miles
 
 kilometers=int(input("Enter kilometers:"))
