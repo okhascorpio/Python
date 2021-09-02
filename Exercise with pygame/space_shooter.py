@@ -16,29 +16,27 @@ winY = 800
 
 #
 
-# Title and icon
+# Title and icon ###################################################################
 pygame.display.set_caption('PYGAME EXERCISE')
-icon = pygame.image.load('Exercise with pygame/spaceship.png')
+icon = pygame.image.load('pygame_exercises/data/spaceship.png')
 pygame.display.set_icon(icon)
 
 # Draw a window
 screen = pygame.display.set_mode((winX, winY))
 
-# Background
-backgroundImg = pygame.image.load('Exercise with pygame/background2.jpg')
+# Background #######################################################################
+backgroundImg = pygame.image.load('pygame_exercises/data/background2.jpg')
 
 # Background sound
-Bullet_sound=mixer.Sound('Exercise with pygame/laser.wav')
-Explossion_sound=mixer.Sound('Exercise with pygame\explosion.wav')
-mixer.music.load('Exercise with pygame/lazarus.wav')
+Bullet_sound=mixer.Sound('pygame_exercises/data/laser.wav')
+Explossion_sound=mixer.Sound('pygame_exercises/data/explosion.wav')
+mixer.music.load('pygame_exercises/data/lazarus.wav')
 mixer.music.play(-1)
 
 def background():
     screen.blit(backgroundImg, (0, 0))
 
-# Items on screen
-
-
+# Items on screen ###################################################################
 class Item():
 
     def __init__(self, Path, X, Y, xRate, yRate, dir):
@@ -54,19 +52,18 @@ class Item():
 
     def drawItem(self, x, y):
         self.rect = self.Img.get_rect(topleft=(x, y))
-        screen.blit(self.Img, (x, y))
+        #self.rect = self.Img.get_rect(center=(self.W/2,self.H/2))
+        #screen.blit(self.Img, (x, y))
+        screen.blit(self.Img, self.rect)
 
 
-# define background
-background = Item('Exercise with pygame/background2.jpg', 0, 0, 0, 0, 0)
-
-# define Player
-Player = Item('Exercise with pygame/spaceship.png',
-              winX/2-32, winY-70, 1, 0, 0)
-# define bullet
-Bullet = Item('Exercise with pygame/bullet.png', winX/2-16, winY-70, 0, 1, 0)
+# define background ################################################################
+background = Item('pygame_exercises/data/background2.jpg', 0, 0, 0, 0, 0)
 
 
+
+# define Player ####################################################################
+Player = Item('pygame_exercises/data/spaceship.png',winX/2-32, winY-70, 1, 0, 0)
 def move_player(dir):
     
     Player.dir = dir
@@ -76,15 +73,17 @@ def move_player(dir):
     if Player.X > winX-Player.W:
         Player.X = winX-Player.W
     Player.drawItem(Player.X, Player.Y)
-    
 
+# define bullet ####################################################################
+Bullet = Item('pygame_exercises/data/bullet.png', winX/2-16, winY-75, 0, 1, 0)
 def reset_bullet():
     global Bullet_state
     Bullet_state = False
     Bullet.dir = 0
-    Bullet.Y = Player.Y
+    Bullet.X = Player.X
+    Bullet.Y = Player.Y+5
     Bullet.drawItem(Bullet.X, Bullet.Y)
-    #print('reset bullet')
+   
 
 
 def fire_bullet():
@@ -93,65 +92,77 @@ def fire_bullet():
     Bullet.Y += Bullet.yRate*Bullet.dir
     
 
-# define List of enemies
+# define List of enemies ###########################################################
 enemies = []
 numOfenemies = 3
 for i in range(numOfenemies):
-    y = random.randint(30, 65)
+    y = random.randint(-70, -30)
     x = random.randint(0, 550)
     r = random.randint(1, 6)*0.2
-    enemy = Item('Exercise with pygame/rock.png', x, y, 0, r, 1)
+    enemy = Item('pygame_exercises/data/rock.png', x, y, 0, r, 1)
     enemies.append(enemy)
 
-
+# Animation of dead enemy #########################################################
 def Boom(i):
-    enemies[i].Img = pygame.image.load('Exercise with pygame/explosion1.png')
+    enemies[i].Img = pygame.image.load('pygame_exercises/data/explosion1.png')
     enemies[i].dir = -1
     Explossion_sound.play()
 
-
+# Re spawn enemy ##################################################################
 def respawn_enemy(i):
-    enemies[i].Img = pygame.image.load('Exercise with pygame/rock.png')
-    enemies[i].Y = random.randint(-300, -65)
+    enemies[i].Img = pygame.image.load('pygame_exercises/data/rock.png')
+    enemies[i].Y = random.randint(-300, -30)
     enemies[i].X = random.randint(0, 550)
     enemies[i].yRate += 0.2
     Bullet.yRate += 0.2
     Player.xRate += 0.2
     enemies[i].drawItem((enemies[i].X), (enemies[i].Y))
     
-
+# Move enemy #######################################################################
 
 def move_enemy(i):
+    enemies[i].Y += enemies[i].yRate*enemies[i].dir
     enemies[i].drawItem((enemies[i].X), (enemies[i].Y))
     
 
-# scores
+
+
+
+# Game Over Text ####################################################################
+game_over_font=pygame.font.Font('freesansbold.ttf',60)
+Game_Over= game_over_font.render('GAME OVER',True,(255,255,255))
+Game_Over_Rect=Game_Over.get_rect(center=(winX/2,winY/2))
+def game_over():
+    screen.blit(Game_Over,Game_Over_Rect)
+
+
+# Scores Text ###########################################################
 score_value = 0
 font = pygame.font.Font('freesansbold.ttf',32)
 textX=10
 textY=10
-
-#show scores
 def show_score(x,y):
     score= font.render('score : '+str(score_value),True,(0,255,0))
     screen.blit(score,(x,y))
 
 
-# Main game loop
-Alive = True
+# Main game loop ####################################################################
+player_alive = True
 Bullet_state = False
 running = True
 
 while running:
     clock.tick(120)
-    pygame.display.update()  # Needed in every screen to update
+    pygame.display.update()
     background.drawItem(0, 0)
-    # Quit out of the window with close button on top
+
+    # Quit out of the window with close button on top ###############################
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False 
-    # Check key inputs
-        if event.type == pygame.KEYDOWN and Alive:
+
+    # Check key inputs ##############################################################
+        if event.type == pygame.KEYDOWN and player_alive:
             if event.key == pygame.K_LEFT:
                 Player.dir = -1
 
@@ -162,12 +173,12 @@ while running:
                 Bullet.X = Player.X+Bullet.W/2
                 Bullet_state = True
                 Bullet_sound.play()          
-        if event.type == pygame.KEYUP and Alive:
+        if event.type == pygame.KEYUP and player_alive:
             if event.key == K_LEFT or event.key == K_RIGHT:
                 Player.dir = 0
-    # event check ended
+    # event check ended ############################################################
 
-    # Fire Bullets         
+    # Fire Bullets #################################################################          
     if Bullet_state:
         if Bullet.Y > 0:
             fire_bullet()
@@ -175,30 +186,42 @@ while running:
         else:
             reset_bullet()
 
-    # move player
+    # move player ##################################################################
     move_player(Player.dir)
 
-    # move enemies
+    # move enemies #################################################################
     for i in range(numOfenemies):
             if enemies[i].Y <= winY:
-                enemies[i].Y += enemies[i].yRate*enemies[i].dir
+                #enemies[i].Y += enemies[i].yRate*enemies[i].dir
                 move_enemy(i)
-            elif enemies[i].Y >= winY and Alive:
+
+            # if enemy goes down the screen #######################################    
+            elif enemies[i].Y >= winY and player_alive:
                 score_value-=1
-                if Alive: respawn_enemy(i)
-            if Bullet.rect.colliderect(enemies[i].rect):
-                score_value+=1
-                y = enemies[i].Y
-                Boom(i)
-                if Alive: reset_bullet()
+                if player_alive: respawn_enemy(i)
+
+            # Bullet Collission ###################################################
+            if enemies[i].Y+enemies[i].H<Player.Y:  
+                if Bullet.rect.colliderect(enemies[i].rect): 
+                    score_value+=1
+                    y = enemies[i].Y
+                    Boom(i)
+                    reset_bullet()
+
+            # Animate dead enemy ##################################################
             if enemies[i].dir == -1:
                 if enemies[i].Y <= y-20:
                     enemies[i].dir = 1
                     respawn_enemy(i)
 
-            if Player.rect.colliderect(enemies[i].rect):
-                Alive=False 
-                Player.Img = pygame.image.load('Exercise with pygame/explosion.png')
+            # Player Enemy Collission ###############################################
+            if Player.rect.colliderect(enemies[i].rect) and player_alive: 
+                player_alive=False 
+                Player.Img = pygame.image.load('pygame_exercises/data/explosion.png')
                 Explossion_sound.play()
-                
+            # Game Over #############################################################
+            if not player_alive:
+                game_over()    
+
+    # Show Score ####################################################################
     show_score(textX,textY)
