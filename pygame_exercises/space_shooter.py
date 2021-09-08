@@ -1,13 +1,14 @@
 # clear screen at Run
-from pygame import surface
-#from os import system
+from os import system
+system("cls")
+import os, psutil
+
 import random
 import pygame
-from pygame.constants import K_LEFT, K_RIGHT
-from pygame import mixer
+from pygame import mixer 
 pygame.init()
 
-#system("cls")
+
 clock = pygame.time.Clock()
 path='pygame_exercises/data/'
 global winX, winY
@@ -150,7 +151,7 @@ def show_score(x,y):
 player_alive = True
 Bullet_state = False
 running = True
-
+print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
 while running:
     clock.tick(120)
     pygame.display.update()
@@ -174,9 +175,12 @@ while running:
                 Bullet_state = True
                 Bullet_sound.play()          
         if event.type == pygame.KEYUP and player_alive:
-            if event.key == K_LEFT or event.key == K_RIGHT:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 Player.dir = 0
-    # event check ended ############################################################
+    
+
+    # move player ##################################################################
+    move_player(Player.dir)
 
     # Fire Bullets #################################################################          
     if Bullet_state:
@@ -186,8 +190,7 @@ while running:
         else:
             reset_bullet()
 
-    # move player ##################################################################
-    move_player(Player.dir)
+
 
     # move enemies #################################################################
     for i in range(numOfenemies):
@@ -202,7 +205,7 @@ while running:
 
             # Bullet Collission ###################################################
             if enemies[i].Y+enemies[i].H<Player.Y:  
-                if Bullet.rect.colliderect(enemies[i].rect): 
+                if Bullet.rect.colliderect(enemies[i].rect) and Bullet_state == True: 
                     score_value+=1
                     y = enemies[i].Y
                     Boom(i)
@@ -225,3 +228,4 @@ while running:
 
     # Show Score ####################################################################
     show_score(textX,textY)
+    
