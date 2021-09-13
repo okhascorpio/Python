@@ -1,7 +1,4 @@
-# clear screen at Run
-from os import system
-system("cls")
-import os, psutil
+# pygame learning exercise
 
 import random
 import pygame
