@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 # exercise with pygame
+=======
+# pygame learning exercise
+
+>>>>>>> e4c3c1c603b7620886db35bdfc1bb38ce2739518
 import random
 import pygame
 from pygame import mixer 
