@@ -27,3 +27,9 @@ print("list_4 is copy of list 1:",list_4)
 
 list_2.extend(list_3)
 print("Extended list2 is: ",list_2)
+
+joined_string= ','.join(list_1)
+print('list to string add coma in between: ',joined_string)
+
+split_string= joined_string.split(',')
+print('string to list separeted at coma: ',split_string)

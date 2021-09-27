@@ -1,8 +1,4 @@
-# clear screen at Run
-from os import system
-system("cls")
-import os, psutil
-
+# exercise with pygame
 import random
 import pygame
 from pygame import mixer 
@@ -15,7 +11,7 @@ global winX, winY
 winX = 600
 winY = 800
 
-#
+
 
 # Title and icon ###################################################################
 pygame.display.set_caption('PYGAME EXERCISE')
@@ -53,8 +49,6 @@ class Item():
 
     def drawItem(self, x, y):
         self.rect = self.Img.get_rect(topleft=(x, y))
-        #self.rect = self.Img.get_rect(center=(self.W/2,self.H/2))
-        #screen.blit(self.Img, (x, y))
         screen.blit(self.Img, self.rect)
 
 
@@ -77,14 +71,12 @@ def move_player(dir):
 
 # define bullet ####################################################################
 Bullet = Item(path+'bullet.png', winX/2-16, winY-75, 0, 1, 0)
+
+
 def reset_bullet():
     global Bullet_state
     Bullet_state = False
-    Bullet.dir = 0
-    Bullet.X = Player.X
-    Bullet.Y = Player.Y+5
-    Bullet.drawItem(Bullet.X, Bullet.Y)
-   
+
 
 
 def fire_bullet():
@@ -151,7 +143,6 @@ def show_score(x,y):
 player_alive = True
 Bullet_state = False
 running = True
-print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
 while running:
     clock.tick(120)
     pygame.display.update()
@@ -172,6 +163,7 @@ while running:
 
             if event.key == pygame.K_SPACE and Bullet_state == False:
                 Bullet.X = Player.X+Bullet.W/2
+                Bullet.Y=Player.Y
                 Bullet_state = True
                 Bullet_sound.play()          
         if event.type == pygame.KEYUP and player_alive:
@@ -179,9 +171,7 @@ while running:
                 Player.dir = 0
     
 
-    # move player ##################################################################
-    move_player(Player.dir)
-
+    
     # Fire Bullets #################################################################          
     if Bullet_state:
         if Bullet.Y > 0:
@@ -190,7 +180,9 @@ while running:
         else:
             reset_bullet()
 
-
+    # move player ##################################################################
+    move_player(Player.dir)
+    
 
     # move enemies #################################################################
     for i in range(numOfenemies):
