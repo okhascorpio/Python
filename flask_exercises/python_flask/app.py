@@ -2,7 +2,9 @@
 
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import os
 
+print (os.environ.get('Test'))
 app = Flask(__name__)
 
 @app.route('/')
