@@ -5,7 +5,7 @@
 
 
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from src.database import db, Todos, STATUS
 from datetime import datetime
@@ -95,7 +95,7 @@ def todo_items():
 
 
 ####################################################################################################
-# Handel PUT requests
+# Handel PUT requests for Updates
 
 # set url end point with integer id of the todo item
 @todos.put("/todos:<int:id>")
@@ -152,13 +152,14 @@ def update_todo_item(id):
         # commit changes to the database
             db.session.commit()
 
-        return {
+        return jsonify({'message':'item updated'},{
             'id': todo_item.id,
             'user': todo_item.user_id,
             'name': todo_item.name,
             'description': todo_item.description,
             'status': todo_item.status
         }
+        )
 
 
 ####################################################################################################

@@ -1,4 +1,3 @@
-#from distutils.command.config import config
 from flask import Flask
 from src.auth import auth
 from src.todos import todos
@@ -12,7 +11,7 @@ def create_app(test_config=None):
 
     if test_config is None:
         app.config.from_mapping(
-            #SECRET_KEY=os.environ.get("SECRET_KEY"),
+            SECRET_KEY=os.environ.get("SECRET_KEY"),
             SQLALCHEMY_DATABASE_URI=os.environ.get("DB_URI"),
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY')
@@ -32,4 +31,6 @@ def create_app(test_config=None):
     app.register_blueprint(auth)
     app.register_blueprint(todos)
 
+    db.create_all()
+  
     return app
