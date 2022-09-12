@@ -1,8 +1,3 @@
-#
-# Handels everything related to the postgresql database
-#
-
-
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from enum import Enum
@@ -16,14 +11,12 @@ class Users(db.Model):
     password = db.Column(db.String(256))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
+    #todo = db.relationship('TODO', backref="user")
 
-
-# this may not be required
     def __repr__(self) -> str:
         return 'User>>> {self.email}'
 
 
-# status of type enum for the todo items in the database
 class STATUS(str,Enum):
    NotStarted = 'NotStarted'
    OnGoing = 'OnGoing'
@@ -46,6 +39,5 @@ class Todos(db.Model):
     status = db.Column(db.Enum(STATUS), default=STATUS.NotStarted)
 
 
-# this may not be required
     def __repr__(self) -> str:
         return 'Todo>>> {self.user_id}'
