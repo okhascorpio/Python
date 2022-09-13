@@ -16,11 +16,7 @@ class Users(db.Model):
     password = db.Column(db.String(256))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
-
-
-# this may not be required
-    def __repr__(self) -> str:
-        return 'User>>> {self.email}'
+    todos = db.relationship('Todos')
 
 
 # status of type enum for the todo items in the database
@@ -40,12 +36,8 @@ class Todos(db.Model):
     id = db.Column(db.Integer, primary_key=True) 
     name = db.Column(db.String())
     description = db.Column(db.String())
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now())
     status = db.Column(db.Enum(STATUS), default=STATUS.NotStarted)
 
-
-# this may not be required
-    def __repr__(self) -> str:
-        return 'Todo>>> {self.user_id}'

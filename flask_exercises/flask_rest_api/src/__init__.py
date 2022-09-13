@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__)
 
     
-    app.config(
+    app.config.update(
         SECRET_KEY=os.environ.get("SECRET_KEY"),
         SQLALCHEMY_DATABASE_URI=os.environ.get("DB_URI"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,

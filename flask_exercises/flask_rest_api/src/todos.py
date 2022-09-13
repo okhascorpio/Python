@@ -7,7 +7,7 @@
 
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from src.database import db, Todos, STATUS
+from src.database import db, Users, Todos, STATUS
 from datetime import datetime
 
 # todo items related blueprint
@@ -23,13 +23,15 @@ todos = Blueprint("todos", __name__, url_prefix="/api/v1/")
 def todo_items():
     # get current user's identity
     current_user = get_jwt_identity()
+    user = Users.query.filter_by(id=current_user).first()
+
 
 # Handle POST requests ie create new todo item
     if request.method == 'POST':
 
         # if not provided, default empty
         name = request.json.get('name', '')
-
+        if name=='': return {'error':'item should have a name at least'}
         # optional description, default empty
         description = request.json.get('description', '')
 
@@ -48,7 +50,7 @@ def todo_items():
         db.session.add(todo_item)
         db.session.commit()
 
-        return {'message': 'todo item added'}
+        return {'message': 'todo item added','user':user.email}
 
 
 
@@ -105,6 +107,7 @@ def update_todo_item(id):
 
     # get current user's identity
     current_user = get_jwt_identity()
+    user = Users.query.filter_by(id=current_user).first()
 
     # fetch todo item based on the given id number and the current user identity
     todo_item = Todos.query.filter_by(user_id=current_user, id=id).first()
@@ -112,7 +115,8 @@ def update_todo_item(id):
     # if todo item is not found for the current user
     if not todo_item:
         return {
-            'error': 'todo item not found, send correct id'
+            'error': 'todo item not found, send correct id',
+            'user' : user.email
         }
 
     # if item is found we can update its fields
@@ -162,6 +166,8 @@ def update_todo_item(id):
         )
 
 
+
+
 ####################################################################################################
 # Handel DELETE requests
 
@@ -173,6 +179,7 @@ def delete_todo_item(id):
 
     # get id of current user
     current_user = get_jwt_identity()
+    user = Users.query.filter_by(id=current_user).first()
 
     # query todo item based on current user id and item id
     todo_item = Todos.query.filter_by(user_id=current_user, id=id).first()
@@ -180,7 +187,8 @@ def delete_todo_item(id):
     # if no item found corresponding to the current user and providid item id
     if not todo_item:
         return {
-            'error': 'todo item not found, send correct id'
+            'error': 'todo item not found, send correct id',
+            'user':user.email
         }
 
     # if item is found

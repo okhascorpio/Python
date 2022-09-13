@@ -71,8 +71,8 @@ def sign_in():
             return {
                 'user': {
                     'access token': access,
-                    'refresh token': refresh,
-                    'user': user.email
+                    'user': user.email,
+                    'user id':user.id
                 }
             }
 
@@ -97,7 +97,7 @@ def sign_in():
 def change_password():
 
     # get the id of current user
-    user_id = get_jwt_identity() 
+    current_user = get_jwt_identity() 
     # receive new password in json format from the user
     new_password = request.json.get('password', '')
 
@@ -107,7 +107,7 @@ def change_password():
 
     # update the new password
     else:
-        user = Users.query.filter_by(id=user_id).first()
+        user = Users.query.filter_by(id=current_user).first()
         user.password = generate_password_hash(new_password)
         user.updated_at=datetime.now()
         db.session.commit()
