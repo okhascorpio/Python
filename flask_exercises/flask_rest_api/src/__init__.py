@@ -5,22 +5,19 @@ from src.database import db
 import os
 from flask_jwt_extended import JWTManager
 
-def create_app(test_config=None):
+def create_app():
 
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
 
-    if test_config is None:
-        app.config.from_mapping(
-            SECRET_KEY=os.environ.get("SECRET_KEY"),
-            SQLALCHEMY_DATABASE_URI=os.environ.get("DB_URI"),
-            SQLALCHEMY_TRACK_MODIFICATIONS=False,
-            JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY')
+    
+    app.config(
+        SECRET_KEY=os.environ.get("SECRET_KEY"),
+        SQLALCHEMY_DATABASE_URI=os.environ.get("DB_URI"),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY')
             
-        )
-        #print(os.environ.get('JWT_SECRET_KEY'))
-
-    else:
-        app.config.from_mapping(test_config)
+    )
+  
 
 
     db.app = app
