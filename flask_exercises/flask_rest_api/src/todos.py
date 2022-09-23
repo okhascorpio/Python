@@ -132,22 +132,22 @@ def update_todo_item(id):
         status = request.json.get('status', '')
 
         # if status is provided but is not one of the allowed options
-        if status is not '' and STATUS.has_key(status) == False:
+        if status != '' and STATUS.has_key(status) == False:
             return {'error': "can only be one of these 'OnGoing','NotStarted','Completed'"}
 
         # if all provided data is correct, go ahead and update required fields
         else:
 
             # if no name is provided keep original, if provided then update
-            if name is not '':
+            if name != '':
                 todo_item.name = name
 
         # if no description is provided keep original, if provided then update
-            if description is not '':
+            if description != '':
                 todo_item.description = description
 
         # if no status is provided keep original, if provided then update
-            if status is not '':
+            if status != '':
                 todo_item.status = status
 
         # update the update_at timestamp

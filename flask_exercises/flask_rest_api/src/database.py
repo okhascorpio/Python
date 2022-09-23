@@ -41,3 +41,5 @@ class Todos(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.now())
     status = db.Column(db.Enum(STATUS), default=STATUS.NotStarted)
 
+
+# END
