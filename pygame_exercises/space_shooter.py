@@ -148,7 +148,7 @@ def show_score(x,y):
 player_alive = True
 Bullet_state = False
 running = True
-print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
+#print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
 while running:
     clock.tick(120)
     pygame.display.update()
