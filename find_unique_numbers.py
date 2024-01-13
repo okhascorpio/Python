@@ -10,6 +10,6 @@ def find_unique_numbers(numbers):
         else: output.remove(x)
     return output
 if __name__ == "__main__":
-    print(find_unique_numbers([1, 2,2]))
+    print(find_unique_numbers([1,2,2,7]))
 
 
